@@ -192,10 +192,16 @@ var ReactStripeCheckout = React.createClass({
     }
   },
 
+  componentDidMount: function componentDidMount() {
+    this.node.addEventListener("click", this.onClick);
+  },
+
   componentWillUnmount: function componentWillUnmount() {
     if (ReactStripeCheckout.stripeHandler) {
       ReactStripeCheckout.stripeHandler.close();
     }
+
+    this.node.removeEventListener("click", this.onClick);
   },
 
   showLoadingDialog: function showLoadingDialog() {
@@ -250,11 +256,15 @@ var ReactStripeCheckout = React.createClass({
     );
   },
 
+  getRef: function getRef(ref) {
+    this.node = ref;
+  },
+
   render: function render() {
     var ComponentClass = this.props.componentClass;
     return !this.props.children ? this.renderStripeButton() : React.createElement(
       ComponentClass,
-      _extends({}, this.props, { onClick: this.onClick }),
+      _extends({}, this.props, { ref: this.getRef }),
       this.props.children
     );
   }
